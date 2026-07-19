@@ -1,0 +1,28 @@
+{
+  "name": "siemprebarato",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*"
+  ],
+  "engines": {
+    "node": ">=20.19.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "dev": "bash script/start_development.sh",
+    "dev:api": "npm run dev --workspace @siemprebarato/api",
+    "dev:admin": "npm run dev --workspace @siemprebarato/admin",
+    "dev:storefront": "npm run dev --workspace @siemprebarato/storefront",
+    "dev:worker": "npm run dev --workspace @siemprebarato/mercadolibre-worker",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "check": "bash script/test_local.sh",
+    "db:migrate": "npm run db:migrate --workspace @siemprebarato/api",
+    "db:seed": "npm run db:seed --workspace @siemprebarato/api",
+    "db:verify": "npm run db:verify --workspace @siemprebarato/api"
+  }
+}
