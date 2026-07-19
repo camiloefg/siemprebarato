@@ -51,22 +51,52 @@ Browsers never connect directly to PostgreSQL. Mercado Libre research is stored 
 
 | Milestone | Status | Result |
 | --- | --- | --- |
-| Foundation and local workflow | Complete | Monorepo, isolated ports, install/start/stop/test scripts, environment template, documentation, and brand assets |
-| PostgreSQL foundation | Complete | Versioned core and catalog migrations, local seed data, migration checksum protection, schema verification, and backup script |
-| Admin authentication foundation | Complete | Google OAuth flow, invited-user allowlist, secure opaque sessions, CSRF protection, roles, session revocation, and audit events |
+| Foundation and local workflow | Complete | npm workspace monorepo, isolated ports, install/start/stop/test scripts, environment template, documentation, and supplied raster/vector brand assets |
+| PostgreSQL foundation | Complete | Five ordered migrations, 19 verified tables, local seed data, migration checksum protection, and custom-format backup/checksum scripts |
+| Admin authentication foundation | Core complete; live OAuth credentials pending | Google OAuth flow, invited-user allowlist, secure opaque sessions, CSRF protection, roles, session revocation, local guarded login, and audit events |
 | Admin shell | Complete | Login, dashboard, user administration, and audit-log screens |
 | Storefront prototype | Complete | Responsive compact catalog, seeded variants, weight products, cart quantities, and wholesale price tiers |
 | Mercado Libre research | Core complete; credentials pending | Official API worker, isolated schema, scheduling, resilient runs, admin configuration, rankings, and candidate notes are complete locally; live requests remain disabled until an application/token exists |
 | Catalog/inventory administration | Core complete | End-to-end product workflow delivered; parity extensions are tracked in `CATALOG_PARITY.md` |
+| Current local qualification | Complete for delivered scope | Nine API/security tests, six worker tests, all workspace type checks/builds, authenticated API smoke checks, 19-table verification, and a checksummed database backup pass locally |
+| Source repository | Published | Initial platform baseline committed and pushed to `origin/main` at `d5f7529` |
 | Customers, checkout, orders, payments | Not started | Planned in milestones 4–5 |
 | Fulfillment, labels, documents, chat | Not started | Planned in milestones 6–7 |
 | Production deployment | Not started | Requires completed local release checks and explicit deployment approval |
+
+### Delivered system checkpoint
+
+The repository currently provides these working local surfaces:
+
+- Administration frontend: Google-only production login flow, guarded development login, dashboard, catalog list/editor, user allowlist management, audit history, and private Mercado Libre research console.
+- Storefront frontend: responsive dense catalog, category presentation, variant selection, weight/unit quantity behavior, stock availability, cart quantities, and visible wholesale price tiers.
+- API: health, authentication/session, admin users, audit, public catalog, transactional catalog/inventory administration, and private research endpoints with role and CSRF enforcement.
+- PostgreSQL: identity/session/audit, catalog, variants, images, price tiers, warehouses, reservations, stock movements, product history, and isolated Mercado Libre settings/categories/runs/checkpoints/snapshots/candidates.
+- Research worker: official-API-only Chile category/ranking workflow, disabled-by-default activation gate, daily scheduling, all-leaf rotation, throttling, bounded retries, partial failures, leases, resumable category checkpoints, retention, and heartbeat state.
+- Local operations: one-command bootstrap, component-specific or full-stack launchers, stop scripts, migrations, idempotent development seeds, schema verification, automated tests/builds, and PostgreSQL backup/checksum generation.
+
+Current verification evidence:
+
+- `bash script/test_local.sh` passes all workspace checks and production builds.
+- Nine API/security tests and six Mercado Libre parsing/retry tests pass.
+- All five migrations match their recorded checksums and all 19 required tables verify.
+- Local HTTP smoke checks confirm research authentication (`401` without a session), invalid-filter rejection (`400`), credential gating (`409`), settings persistence, and zero research fields in the public catalog response.
+- The final local custom-format database backup and SHA-256 checksum were verified, including all six research tables.
+- No production VM, DNS, proxy, certificate, payment account, Google Cloud project, or live external integration has been changed.
+
+### Explicitly pending
+
+- Dedicated Google Cloud project, consent screen, and OAuth credentials for live admin login.
+- Mercado Libre application/account authorization, access token, and live-response validation.
+- Customer identity and guest-checkout decision, Santiago delivery configuration, and the remaining commerce milestones.
+- Webpay/Mercado Pago accounts, Tablee label references, private customer documents, OVM-style chat, and remaining administration parity decisions.
+- Full release qualification and any production deployment work.
 
 ## 4. Delivery roadmap
 
 ### Milestone 1 — Foundation and secure access
 
-Status: complete.
+Status: core implementation complete locally. Live Google sign-in remains gated by the dedicated Google Cloud OAuth client.
 
 Delivered:
 
@@ -132,11 +162,11 @@ Acceptance criteria:
 
 Status: core implementation complete locally. Live synchronization is intentionally gated by credentials and an administrator’s terms acknowledgement.
 
-Discovery gate:
+Discovery conclusions (complete):
 
-- Confirm which official Mercado Libre APIs and credentials can legally and reliably provide the required Chile category and sales-ranking signals.
-- Confirm rate limits, pagination, category coverage, data retention constraints, and whether “most sold” is available directly or requires a documented proxy signal.
-- Do not implement scraping or an unsupported workaround without a separate decision.
+- The official `MLC` category dump plus leaf-category highlights endpoints provide the supported category and top-20 ranking signals; bearer OAuth credentials are required.
+- Mercado Libre does not publish one universal numeric quota for this workflow, so request pacing, retries, category limits, and retention remain conservative and configurable.
+- Scraping, inferred sales volumes, and unsupported workarounds are excluded; the service stores only official ranking observations and optional official detail responses.
 
 Delivered:
 
@@ -374,5 +404,6 @@ The immediate next slice is Milestone 4: define the customer identity/guest-chec
 
 ## 8. Document change log
 
+- 2026-07-19: Reconciled the plan with the published `d5f7529` baseline, added a delivered-system checkpoint, updated cumulative local validation evidence, and separated completed foundations from credential/product decisions that remain pending.
 - 2026-07-19: Completed the local Milestone 3 core, documented the official Mercado Libre API/terms boundary, recorded the credential gate, and advanced the next slice to Milestone 4.
 - 2026-07-18: Marked the Milestone 2 core catalog workflow complete, recorded its validation evidence, linked the source-app parity matrix, and advanced the immediate next slice to Mercado Libre discovery.
