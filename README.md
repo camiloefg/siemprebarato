@@ -88,6 +88,7 @@ bash script/test_local.sh
 ## Documentation
 
 - [Implementation plan](./docs/IMPLEMENTATION_PLAN.md)
+- [Project chat history](./docs/CHAT_HISTORY.md)
 - [Catalog and inventory parity](./docs/CATALOG_PARITY.md)
 - [Mercado Libre research](./docs/MERCADOLIBRE_RESEARCH.md)
 - [Architecture](./docs/ARCHITECTURE.md)
@@ -96,6 +97,7 @@ bash script/test_local.sh
 
 ## Change log
 
+- 2026-07-22: Added a repository-safe project conversation archive for continuity across future development sessions.
 - 2026-07-19: Added the private Mercado Libre Chile research worker, isolated data model, secure admin APIs, and internal research console.
 - 2026-07-18: Delivered the Milestone 2 catalog/inventory administration workflow, storefront variant pricing, and OVM/Tablee parity matrix.
 - 2026-07-18: Created the monorepo foundation, local workflow, architecture, and first authentication/catalog milestone documentation.
